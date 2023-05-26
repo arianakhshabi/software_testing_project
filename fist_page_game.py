@@ -45,6 +45,8 @@ class Ui_MainWindow(object):
         self.About_btn.setDefault(False)
         self.About_btn.setFlat(True)
         self.About_btn.setObjectName("About_btn")
+
+        self.About_btn.clicked.connect(self.about_page)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(650, 560, 111, 41))
         font = QtGui.QFont()
@@ -72,6 +74,8 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
     def play_game(self):
         os.system("python a_main.py")
+    def about_page(self):
+        os.system("python About_page.py")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
