@@ -1,9 +1,11 @@
 import pygame
+import os
 
 pygame.init()
 
 font = pygame.font.SysFont('Amelaryas', 32, bold=pygame.font.Font.bold)
 screen = pygame.display.set_mode([1024, 1024])
+pygame.display.set_caption("Scrolling Text")
 
 bg = pygame.image.load('images/934cd7b4-c97b-4764-9796-058cb1eecce9.jpg')
 
@@ -29,6 +31,13 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # Left mouse button
+                mouse_pos = pygame.mouse.get_pos()
+                if back_button_rect.collidepoint(mouse_pos):
+                    pygame.quit()  # Close the current window
+                    os.system("python fist_page_game.py")  # Open first_game_page.py
+                    run = False
 
     rendered_lines = []
     current_line = ""
@@ -46,6 +55,11 @@ while run:
         line_surface = font.render(line, True, 'Black')
         screen.blit(line_surface, (270, y_offset))
         y_offset += line_surface.get_height() + 5  # Add some spacing between lines
+
+    # Draw back button
+    back_button = font.render("Back", True, 'Black')
+    back_button_rect = back_button.get_rect(center=((screen.get_width() // 2)-40, y_offset + 100))
+    screen.blit(back_button, back_button_rect)
 
     pygame.display.flip()
 
