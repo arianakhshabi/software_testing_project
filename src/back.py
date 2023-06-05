@@ -1,16 +1,18 @@
 import pygame
+from board import Board
 
 class Game:
     def __init__(self):
         self.home_button_rect = pygame.Rect(10, 10, 100, 30)
         self.reset_button_rect = pygame.Rect(120, 10, 100, 30)
         self.undo_button_rect = pygame.Rect(230, 10, 100, 30)
+        self.board = Board()
 
     def show_bg(self, surface):
         surface_width = surface.get_width()
         surface_height = surface.get_height()
 
-        background_image = pygame.image.load("src\TASVIRESTAN_18705312_t.jpg")  # Replace "background.jpg" with your actual image file
+        background_image = pygame.image.load("src/TASVIRESTAN_18705312_t.jpg")  # Replace "background.jpg" with your actual image file
         background_image = pygame.transform.scale(background_image, (surface_width, surface_height))
         surface.blit(background_image, (0, 0))
 
@@ -28,12 +30,26 @@ class Game:
                 square_y = chessboard_y + row * square_size   # Increased y-coordinate to account for the navbar
 
                 if (row + col) % 2 == 0:
-                    color = (234, 235, 200)
+                    color = (200, 244, 249)
                 else:
-                    color = (119, 154, 88)
+                    color = (24, 222, 149)
 
                 square_rect = pygame.Rect(square_x, square_y, square_size, square_size)
                 pygame.draw.rect(surface, color, square_rect)
+    
+    def draw_pieces(self, surface):
+        for row in range(8):
+            for col in range(8):
+                if self.board.squres[row][col].has_piece():
+                    piece = self.board.squres[row][col].piece
+
+                    img = pygame.image.load(piece.image)  # Load and convert the image
+                    img = pygame.transform.scale(img, (80, 80))  # Scale the image to the desired size
+
+                    img_center = col * (800 // 8) + (800 // 8) // 2 + 75, row * (800 // 8) + (800 // 8) // 2 + 50  # Add the desired offset
+                    piece.image_rect = img.get_rect(center=img_center)
+                    surface.blit(img, piece.image_rect)
+
 
     def draw_navbar(self, surface):
         surface_width = surface.get_width()

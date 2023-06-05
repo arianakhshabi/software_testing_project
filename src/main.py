@@ -15,7 +15,8 @@ class Main:
         while True:
             self.screen.blit(self.background_image, (0, 0))  # Blit the background image 
             self.back.show_bg(self.screen)
-            self.back.draw_navbar(self.screen)  # Moved draw_navbar to the back.py file
+            self.back.draw_navbar(self.screen)
+            self.back.draw_pieces(self.screen)  # Moved draw_navbar to the back.py file
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
