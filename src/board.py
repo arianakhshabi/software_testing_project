@@ -8,6 +8,7 @@ class Board:
        self._add_piece('white')
        self._add_piece('black')
        
+       
     def _create(self):
 
         for row in range(8):

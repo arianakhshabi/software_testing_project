@@ -1,5 +1,6 @@
 import pygame
 from board import Board
+from drag import Drag
 
 class Game:
     def __init__(self):
@@ -7,6 +8,7 @@ class Game:
         self.reset_button_rect = pygame.Rect(120, 10, 100, 30)
         self.undo_button_rect = pygame.Rect(230, 10, 100, 30)
         self.board = Board()
+        self.drag=Drag()
 
     def show_bg(self, surface):
         surface_width = surface.get_width()

@@ -16,13 +16,27 @@ class Main:
             self.screen.blit(self.background_image, (0, 0))  # Blit the background image 
             self.back.show_bg(self.screen)
             self.back.draw_navbar(self.screen)
-            self.back.draw_pieces(self.screen)  # Moved draw_navbar to the back.py file
+            self.back.draw_pieces(self.screen)
+            
+            if self.back.drag.dragging:
+                self.back.drag.update_blit(self.screen)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
+                    self.back.drag.update_mouse(event.pos)
+
+                    cliked_row = ((self.back.drag.mouseY - 75) // ((800 // 8) ))
+                    cliked_col = ((self.back.drag.mouseX - 50) // ((800 // 8) ))
+
+                    if self.back.board.squres[cliked_row][cliked_col].has_piece():
+                        piece=self.back.board.squres[cliked_row][cliked_col].piece
+                        self.back.drag.save_initial(event.pos)
+                        self.back.drag.drag_piece(event.pos)
+                    
+                    elif event.button == 1:
                         pos = pygame.mouse.get_pos()
                         if self.back.home_button_rect.collidepoint(pos):  # Update to self.back.home_button_rect
                             # Handle home button click
@@ -33,6 +47,13 @@ class Main:
                         elif self.back.undo_button_rect.collidepoint(pos):  # Update to self.back.undo_button_rect
                             # Handle undo button click
                             print("Undo button clicked")
+                elif event.type==pygame.MOUSEMOTION:
+                    if self.back.drag.dragging:
+                        self.back.drag.update_mouse(event.pos)
+                        self.back.drag.update_blit(self.screen)
+
+                elif event.type==pygame.MOUSEBUTTONUP:
+                    self.back.drag.undrag_piece()
 
             pygame.display.update()
 
