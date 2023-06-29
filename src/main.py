@@ -1,5 +1,7 @@
 import copy
 
+from colorama import Fore
+
 class ChessPiece:
     def __init__(self, color):
         self.color = color
@@ -334,25 +336,115 @@ class ChessGame:
 # Create an instance of the ChessGame class and start the game
 def test_chess_game():
     game = ChessGame()
-
+###############################################################################test magadir avaliye board#########################
     # Test initial board state
     if str(game.board[0][4]) == '♚':
-        print("ok Black King")  # Test for Black King
+        print(f"{Fore.GREEN}ok Black King{Fore.WHITE}")  # Test for Black King
+    else :
+        print(f"{Fore.RED}NOT OK {Fore.WHITE}")
+
+
     if str(game.board[7][4]) == '♔' :
-        print("ok White King") # White King
+        print(f"{Fore.GREEN}ok White King{Fore.WHITE}") # White King
+    else :
+        print(f"{Fore.RED}NOT OK {Fore.WHITE}")
+
+
     if str(game.board[0][0]) == '♜':
-        print("ok black rook") 
+        print(f"{Fore.GREEN}ok black rook{Fore.WHITE}")
+    else :
+        print(f"{Fore.RED}NOT OK {Fore.WHITE}") 
+
  
     if str(game.board[7][7]) == '♖':
-          print("ok white rook")# White Rook
-    print(game.board[6][4])
+          print(f"{Fore.GREEN}ok white rook{Fore.WHITE}")# White Rook
+    else :
+        print(f"{Fore.RED}NOT OK {Fore.WHITE}")
+
+
+############################################################## test harekat ha #######################################################
     game.make_move((6, 4), (4, 4))
     if  str(game.board[4][4]) == '♙':
         if  str(game.board[6][4])=="None":
-            print("this move is ok")
+            print(f"{Fore.GREEN}this move is ok{Fore.WHITE}")
+    else :
+        print(f"{Fore.RED}NOT OK {Fore.WHITE}")
     
+
+    game.make_move((7, 6), (5, 5))
+    if str(game.board[5][5]) == '♘':
+        if str(game.board[7][6]) == "None":
+            print(f"{Fore.GREEN}This move is valid.{Fore.WHITE}")
+        else:
+            print(f"{Fore.RED}This move is invalid. Destination position is not empty.{Fore.WHITE}")
+    else:
+        print(f"{Fore.RED}This move is invalid. Starting position does not contain a knight.{Fore.WHITE}")
+
+    game.make_move((1, 0), (2, 2))
+    if str(game.board[2][2]) == '♞':
+        if str(game.board[1][0]) == "None":
+            print(f"{Fore.GREEN}This move is valid.{Fore.WHITE}")
+        else:
+            print(f"{Fore.RED}This move is invalid. Destination position is not empty.{Fore.WHITE}")
+    else:
+        print(f"{Fore.RED}This move is invalid. {Fore.GREEN} so Logics worked correctly.{Fore.WHITE} sarbaz be (2,2) nemiravad")
     
-      
+    game.make_move((1, 0), (3, 1))
+    if str(game.board[3][1]) == '♞':
+        if str(game.board[1][0]) == "None":
+            print(f"{Fore.GREEN}This move is valid.{Fore.WHITE}")
+        else:
+            print(f"{Fore.RED}This move is invalid. Destination position is not empty.{Fore.WHITE}")
+    else:
+        print(f"{Fore.RED}This move is invalid. {Fore.GREEN} so Logics worked correctly.{Fore.WHITE}")
+
+    game.make_move((3, 4), (3, 3))
+    if str(game.board[3][2]) == '♞':
+        if str(game.board[3][2]) == "None":
+            print(f"{Fore.GREEN}This move is valid.{Fore.WHITE}")
+        else:
+            print(f"{Fore.RED}This move is invalid. Destination position is not empty.{Fore.WHITE}")
+    else:
+        print(f"{Fore.RED}This move is invalid. {Fore.GREEN} so Logics worked correctly.{Fore.WHITE}")
+
+
+
+    game.make_move((0, 1), (2, 0))
+    if str(game.board[2][0]) == '♞':
+        if str(game.board[0][1]) == "None":
+            print(f"{Fore.GREEN}This move is valid.{Fore.WHITE}")
+        else:
+            print(f"{Fore.RED}This move is invalid. Destination position is not empty.{Fore.WHITE}")
+    else:
+        print(f"{Fore.RED}This move is invalid. Starting position does not contain a knight.{Fore.WHITE}")
+
+
+   
+
+########################################################### test undo ##########################################################
+
+    game.undo_move()
+    if str(game.board[0][1]) == '♞':
+        if str(game.board[2][0]) == "None":
+            print(f"{Fore.GREEN}This move is valid.{Fore.WHITE}")
+        else:
+            print(f"{Fore.RED}This move is invalid. Destination position is not empty.{Fore.WHITE}")
+    else:
+        print(f"{Fore.RED}This move is invalid. Starting position does not contain a knight.{Fore.WHITE}")
+
+######################################################### test reset #########################################################
+    game.reset_board()
+    
+    if str(game.board[7][4]) == '♔' :
+        print(f"{Fore.GREEN}ok White King{Fore.WHITE}") # White King
+    else :
+        print(f"{Fore.RED}NOT OK {Fore.WHITE}")
+
+
+    if str(game.board[0][1]) == '♞':
+        print(f"{Fore.GREEN}ok Black knight{Fore.WHITE}")
+    else :
+        print(f"{Fore.RED}NOT OK {Fore.WHITE}") 
 
 
 # Run the test
