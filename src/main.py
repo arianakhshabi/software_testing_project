@@ -314,9 +314,19 @@ def test_chess_game():
 ###################################################### test rook ################################################################
     game.reset_board()
     game.make_move((6, 0), (4, 0))
-    game.make_move((7, 0), (4, 4))
+    game.make_move((1, 0), (3, 0))
+    game.make_move((7, 0), (5, 0))
+    game.make_move((1, 1), (3, 1))
+    game.make_move((5, 0), (5, 3))
+    if str(game.board[5][3]) == '♖':
+        if str(game.board[7][0]) == "None":
+            print(f"{Fore.GREEN}This move is valid.{Fore.WHITE}")
+        else:
+            print(f"{Fore.RED}This move is invalid. Destination position is not empty.{Fore.WHITE}")
+    else:
+        print(f"{Fore.RED}This move is invalid. Starting position does not contain a knight.{Fore.WHITE}")
 
-# Run the test
+
 
 shoro=input("""
 |///////////////////////////////////////|
