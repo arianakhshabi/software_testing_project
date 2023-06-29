@@ -73,7 +73,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
     def play_game(self):
-        os.system("python a_main.py")
+        os.system("python F:\software_testing\src\main.py")
     def about_page(self):
         os.system("python About_page.py")
 
