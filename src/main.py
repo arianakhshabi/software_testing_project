@@ -104,7 +104,7 @@ class ChessGame:
 
 
     def is_check(self, player_color):
-        # Find the position of the player's king
+    # Find the position of the player's king
         king_position = None
         for row in range(8):
             for col in range(8):
@@ -121,8 +121,12 @@ class ChessGame:
             for col in range(8):
                 piece = self.board[row][col]
                 if piece is not None and piece.color != player_color:
-                    if self.is_valid_move((row, col), king_position):
-                        return True
+                    start = (row, col)
+                    for i in range(8):
+                        for j in range(8):
+                            end = (i, j)
+                            if self.is_valid_move(start, end) and self.board[row][col].valid_moves(start, end, self.board):
+                                return True
 
         return False
 
@@ -163,7 +167,7 @@ class ChessGame:
                 if piece:
                     self.make_move(start, end)
                     self.current_player = 'black' if self.current_player == 'white' else 'white'
-                    if self.is_check(self.current_player):
+                    if self.is_check("black"if (self.current_player == "white") else "white"):
                         print(f"{Fore.RED}{self.current_player} is in check!{Fore.WHITE}")
                 else:
                     print("Invalid move! Try again.")
@@ -301,7 +305,7 @@ def test_chess_game():
     game.make_move((6, 4), (4, 4))
     game.make_move((1, 3), (3, 3))
     game.make_move((6, 5), (3, 1))
-    print(game.is_check("black"))
+    print(game.is_check("white"))
 
 
 # Run the test
