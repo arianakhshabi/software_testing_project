@@ -1,4 +1,4 @@
-# Chess Game
+import copy
 
 class ChessPiece:
     def __init__(self, color):
@@ -44,11 +44,22 @@ class Bishop(ChessPiece):
 
 class Knight(ChessPiece):
     def valid_moves(self, start, end, board):
-        # Implement logic for valid knight moves
-        pass
+        start_row, start_col = start
+        end_row, end_col = end
+
+        # Calculate the difference in rows and columns
+        row_diff = abs(end_row - start_row)
+        col_diff = abs(end_col - start_col)
+
+        # Check if the move is a valid knight move
+        if (row_diff == 2 and col_diff == 1) or (row_diff == 1 and col_diff == 2):
+            return True
+
+        return False
 
     def __repr__(self):
         return '♞' if self.color == 'black' else '♘'
+
 class Pawn(ChessPiece):
     
     def valid_moves(self, start, end, board):
@@ -100,6 +111,8 @@ class ChessGame:
         ]
         self.current_player = 'white'
         self.moves = []
+        self.previous_board = None  # Store moves history for undo
+
 
     def print_board(self):
         for row in self.board:
@@ -122,10 +135,24 @@ class ChessGame:
     
     def make_move(self, start, end):
         piece = self.board[start[0]][start[1]]
+        self.previous_board = copy.deepcopy(self.board)  # Store the previous board state
         self.board[start[0]][start[1]] = None
         self.board[end[0]][end[1]] = piece
         move = ChessMove(start, end)
         self.moves.append(move)
+
+    def undo_move(self):
+        if len(self.moves) == 0:
+            print("No moves to undo.")
+            return
+
+        last_move = self.moves.pop()
+        
+        self.board = self.previous_board  # Restore the previous board state
+        self.previous_board = None  # Clear the previous board state
+        self.current_player = 'white' if self.current_player == 'black' else 'black'  # Switch the current player
+        print("Undo successful.")
+        print("Last move:", last_move)
 
     def play_game(self):
         while True:
@@ -141,6 +168,9 @@ class ChessGame:
                 continue
             elif action=='q':
                 exit()
+            if action == 'u':
+                self.undo_move()
+                continue
 
             # Split the input into start and end positions
             elif action=='m':
