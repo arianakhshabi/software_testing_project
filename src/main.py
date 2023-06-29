@@ -2,197 +2,20 @@ import copy
 
 from colorama import Fore
 
-class ChessPiece:
-    def __init__(self, color):
-        self.color = color
+from piece import *
 
-    def valid_moves(self, start, end, board):
-        raise NotImplementedError("Subclass must implement the valid_moves method")
+from king import*
+from queen import*
+from rook import*
+from bishop import*
+from knight import*
+from pawn import*
 
-    def __repr__(self):
-        raise NotImplementedError("Subclass must implement the __repr__ method")
-
-class King(ChessPiece):
-    def valid_moves(self, start, end, board):
-        start_row, start_col = start
-        end_row, end_col = end
-
-        # Check if the move is within one square in any direction
-        if abs(start_row - end_row) > 1 or abs(start_col - end_col) > 1:
-            return False
-
-        # Check if the destination square is empty or has an opponent's piece
-        if board[end_row][end_col] is None or board[end_row][end_col].color != self.color:
-            return True
-
-        return False
-
-    def __repr__(self):
-        return '♚' if self.color == 'black' else '♔'
-
-
-class Queen(ChessPiece):
-    def valid_moves(self, start, end, board):
-        start_row, start_col = start
-        end_row, end_col = end
-
-        # Check if the move is diagonal, horizontal, or vertical
-        if abs(start_row - end_row) != abs(start_col - end_col) and start_row != end_row and start_col != end_col:
-            return False
-
-        # Check if there are any pieces obstructing the path
-        if start_row == end_row:
-            # Moving horizontally
-            direction = 1 if end_col > start_col else -1
-            for col in range(start_col + direction, end_col, direction):
-                if board[start_row][col] is not None:
-                    return False
-        elif start_col == end_col:
-            # Moving vertically
-            direction = 1 if end_row > start_row else -1
-            for row in range(start_row + direction, end_row, direction):
-                if board[row][start_col] is not None:
-                    return False
-        else:
-            # Moving diagonally
-            row_direction = 1 if end_row > start_row else -1
-            col_direction = 1 if end_col > start_col else -1
-            row = start_row + row_direction
-            col = start_col + col_direction
-            while row != end_row:
-                if board[row][col] is not None:
-                    return False
-                row += row_direction
-                col += col_direction
-
-        # Check if the destination square is empty or has an opponent's piece
-        if board[end_row][end_col] is None or board[end_row][end_col].color != self.color:
-            return True
-
-        return False
-
-    def __repr__(self):
-        return '♛' if self.color == 'black' else '♕'
-
-class Rook(ChessPiece):
-    def valid_moves(self, start, end, board):
-        start_row, start_col = start
-        end_row, end_col = end
-
-        # Check if the move is horizontal or vertical
-        if start_row != end_row and start_col != end_col:
-            return False
-
-        # Check if there are any pieces obstructing the path
-        if start_row == end_row:
-            # Moving horizontally
-            direction = 1 if end_col > start_col else -1
-            for col in range(start_col + direction, end_col, direction):
-                if board[start_row][col] is not None:
-                    return False
-        else:
-            # Moving vertically
-            direction = 1 if end_row > start_row else -1
-            for row in range(start_row + direction, end_row, direction):
-                if board[row][start_col] is not None:
-                    return False
-
-        # Check if the destination square is empty or has an opponent's piece
-        if board[end_row][end_col] is None or board[end_row][end_col].color != self.color:
-            return True
-
-        return False
-
-    def __repr__(self):
-        return '♜' if self.color == 'black' else '♖'
-
-
-class Bishop(ChessPiece):
-    def valid_moves(self, start, end, board):
-        start_row, start_col = start
-        end_row, end_col = end
-
-        # Check if the move is diagonal
-        if abs(end_row - start_row) != abs(end_col - start_col):
-            return False
-
-        # Check if there are any pieces obstructing the diagonal path
-        row_direction = 1 if end_row > start_row else -1
-        col_direction = 1 if end_col > start_col else -1
-        row = start_row + row_direction
-        col = start_col + col_direction
-        while row != end_row and col != end_col:
-            if board[row][col] is not None:
-                return False
-            row += row_direction
-            col += col_direction
-
-        # Check if the destination square is empty or has an opponent's piece
-        if board[end_row][end_col] is None or board[end_row][end_col].color != self.color:
-            return True
-
-        return False
-
-    def __repr__(self):
-        return '♝' if self.color == 'black' else '♗'
-
-class Knight(ChessPiece):
-    def valid_moves(self, start, end, board):
-        start_row, start_col = start
-        end_row, end_col = end
-
-        # Calculate the difference in rows and columns
-        row_diff = abs(end_row - start_row)
-        col_diff = abs(end_col - start_col)
-
-        # Check if the move is a valid knight move
-        if (row_diff == 2 and col_diff == 1) or (row_diff == 1 and col_diff == 2):
-            destination_piece = board[end_row][end_col]
-            if destination_piece is None or destination_piece.color != self.color:
-                return True
-
-        return False
-
-    def __repr__(self):
-        return '♞' if self.color == 'black' else '♘'
-
-
-class Pawn(ChessPiece):
-    
-    def valid_moves(self, start, end, board):
-    
-        start_row, start_col = start
-        end_row, end_col = end
-        
-
-        direction = -1 if self.color == 'white' else 1
-
-        # Check if the move is a valid pawn move
-        if end_col == start_col and end_row == start_row + direction and board[end_row][end_col] is None:
-            return True
-        elif end_row == start_row + direction and abs(end_col - start_col) == 1 and board[end_row][end_col] is not None:
-            return True
-        elif start_row == 1 and end_row == start_row + 2 * direction and start_col == end_col and board[start_row + direction][start_col] is None and board[end_row][end_col] is None:
-            return True
-        elif start_row == 6 and end_row == start_row + 2 * direction and start_col == end_col and board[start_row + direction][start_col] is None and board[end_row][end_col] is None:
-            return True
-
-        return False
-
-
-    def __repr__(self):
-        return '♟' if self.color == 'black' else '♙'
+from move import*
 
 
    
 
-class ChessMove:
-    def __init__(self, start, end):
-        self.start = start
-        self.end = end
-
-    def __repr__(self):
-        return f"Move: {self.start} to {self.end}"
 
 class ChessGame:
     def __init__(self):
@@ -213,7 +36,7 @@ class ChessGame:
 
     def print_board(self):
         for row in self.board:
-            print(' '.join(str(piece) if piece is not None else ' ' for piece in row))
+             print(' '.join((Fore.GREEN+str(piece)+Fore.WHITE) if piece is not None and piece.color == "white" else (Fore.BLUE+str(piece)+Fore.WHITE) if piece is not None else ' ' for piece in row))
         print()
 
     
@@ -280,6 +103,32 @@ class ChessGame:
         return possible_moves
 
 
+    def is_check(self, player_color):
+        # Find the position of the player's king
+        king_position = None
+        for row in range(8):
+            for col in range(8):
+                piece = self.board[row][col]
+                if isinstance(piece, King) and piece.color == player_color:
+                    king_position = (row, col)
+                    break
+
+        if king_position is None:
+            return False
+
+        # Check if any opponent's piece can attack the king
+        for row in range(8):
+            for col in range(8):
+                piece = self.board[row][col]
+                if piece is not None and piece.color != player_color:
+                    if self.is_valid_move((row, col), king_position):
+                        return True
+
+        return False
+
+
+
+
     def play_game(self):
         while True:
             self.print_board()
@@ -314,6 +163,8 @@ class ChessGame:
                 if piece:
                     self.make_move(start, end)
                     self.current_player = 'black' if self.current_player == 'white' else 'white'
+                    if self.is_check(self.current_player):
+                        print(f"{Fore.RED}{self.current_player} is in check!{Fore.WHITE}")
                 else:
                     print("Invalid move! Try again.")
 
@@ -445,6 +296,12 @@ def test_chess_game():
         print(f"{Fore.GREEN}ok Black knight{Fore.WHITE}")
     else :
         print(f"{Fore.RED}NOT OK {Fore.WHITE}") 
+##################################################### test check 
+    game.reset_board()
+    game.make_move((6, 4), (4, 4))
+    game.make_move((1, 3), (3, 3))
+    game.make_move((6, 5), (3, 1))
+    print(game.is_check("black"))
 
 
 # Run the test
