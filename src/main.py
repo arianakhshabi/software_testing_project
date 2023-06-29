@@ -217,7 +217,7 @@ def test_chess_game():
         print(f"{Fore.RED}NOT OK {Fore.WHITE}")
 
 
-############################################################## test harekat ha #######################################################
+############################################################## test harekat ha  pawn #######################################################
     game.make_move((6, 4), (4, 4))
     if  str(game.board[4][4]) == '♙':
         if  str(game.board[6][4])=="None":
@@ -225,7 +225,7 @@ def test_chess_game():
     else :
         print(f"{Fore.RED}NOT OK {Fore.WHITE}")
     
-
+#################################################### test harekat knight   ################################################################
     game.make_move((7, 6), (5, 5))
     if str(game.board[5][5]) == '♘':
         if str(game.board[7][6]) == "None":
@@ -300,13 +300,21 @@ def test_chess_game():
         print(f"{Fore.GREEN}ok Black knight{Fore.WHITE}")
     else :
         print(f"{Fore.RED}NOT OK {Fore.WHITE}") 
-##################################################### test check 
+##################################################### test check #############################################################
     game.reset_board()
     game.make_move((6, 4), (4, 4))
     game.make_move((1, 3), (3, 3))
     game.make_move((6, 5), (3, 1))
-    print(game.is_check("white"))
+    print(game.is_check("black"))
+    if game.is_check("black") == True:
+        print(f"{Fore.GREEN} check function is ok {Fore.WHITE}")
+    else:
+        print(f"{Fore.RED}NOT OK {Fore.WHITE}") 
 
+###################################################### test rook ################################################################
+    game.reset_board()
+    game.make_move((6, 0), (4, 0))
+    game.make_move((7, 0), (4, 4))
 
 # Run the test
 
