@@ -158,7 +158,7 @@ class Pawn(ChessPiece):
     
         start_row, start_col = start
         end_row, end_col = end
-        print(start_row,end_row)
+        
 
         direction = -1 if self.color == 'white' else 1
 
@@ -246,6 +246,35 @@ class ChessGame:
         print("Undo successful.")
         print("Last move:", last_move)
 
+    def calculate_possible_moves(self, row, col,board):
+        piece = self.board[row][col]
+
+        # Check if a piece exists at the given position
+        if piece is None:
+            return []
+
+        # Initialize a list to store the possible moves
+        possible_moves = []
+
+        # Chess notation mapping for columns
+        column_mapping = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
+        # Iterate over all the board positions
+        for i in range(8):
+            for j in range(8):
+                end = (i, j)
+
+                # Check if the move is valid
+                if piece.valid_moves((row, col), end, self.board):
+                    # Convert row and column indices to chess notation
+                    start_position = f"{column_mapping[col]}{8 - row}"
+                    end_position = f"{column_mapping[j]}{8 - i}"
+
+                    possible_moves.append((start_position, end_position))
+
+        return possible_moves
+
+
     def play_game(self):
         while True:
             self.print_board()
@@ -273,7 +302,8 @@ class ChessGame:
                 start = (8 - int(start[1]), ord(start[0]) - ord('a') )
                 end = (8 - int(end[1]), ord(end[0]) - ord('a') )
 
-
+                possible_moves = self.calculate_possible_moves(start[0], start[1], self.board)
+                print(possible_moves)
                 # Check if the move is valid
                 piece = self.is_valid_move(start, end)
                 if piece:
@@ -299,5 +329,43 @@ class ChessGame:
 
 
 # Create an instance of the ChessGame class and start the game
-game = ChessGame()
-game.play_game()
+def test_chess_game():
+    game = ChessGame()
+
+    # Test initial board state
+    if str(game.board[0][4]) == '♚':
+        print("ok Black King")  # Test for Black King
+    if str(game.board[7][4]) == '♔' :
+        print("ok White King") # White King
+    if str(game.board[0][0]) == '♜':
+        print("ok black rook") 
+ 
+    if str(game.board[7][7]) == '♖':
+          print("ok white rook")# White Rook
+    print(game.board[6][4])
+    game.make_move((6, 4), (4, 4))
+    if  str(game.board[4][4]) == '♙':
+        if  str(game.board[6][4])=="None":
+            print("this move is ok")
+    
+    
+      
+
+
+# Run the test
+
+shoro=input("""
+|///////////////////////////////////////|
+|                                       |
+|        Chess Game:                    |
+|                                       |
+|       A:[play]        t:[test]        |
+|                                       |
+|///////////////////////////////////////|
+""")
+if shoro=='a':
+
+    game = ChessGame()
+    game.play_game()
+elif shoro=='t':
+    test_chess_game()
