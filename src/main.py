@@ -145,12 +145,15 @@ class Knight(ChessPiece):
 
         # Check if the move is a valid knight move
         if (row_diff == 2 and col_diff == 1) or (row_diff == 1 and col_diff == 2):
-            return True
+            destination_piece = board[end_row][end_col]
+            if destination_piece is None or destination_piece.color != self.color:
+                return True
 
         return False
 
     def __repr__(self):
         return '♞' if self.color == 'black' else '♘'
+
 
 class Pawn(ChessPiece):
     
